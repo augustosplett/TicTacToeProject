@@ -1,4 +1,4 @@
-package State;
+package Block.State;
 
 public class Blank implements IState{
     public static final Blank instance = new Blank();

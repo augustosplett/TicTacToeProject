@@ -1,4 +1,4 @@
-package State;
+package Block.State;
 
 public class SimbolX implements IState{
     public static final SimbolX instance = new SimbolX();

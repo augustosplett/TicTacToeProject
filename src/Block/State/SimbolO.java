@@ -1,4 +1,4 @@
-package State;
+package Block.State;
 
 public class SimbolO implements IState{
     public static final SimbolO instance = new SimbolO();
