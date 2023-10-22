@@ -52,10 +52,10 @@ public class createNewGame
 
         public static boolean handleChoice (String choice){
             int row = Integer.parseInt(choice.substring(1)) - 1;
-            int col = switch (choice.charAt(0)) {
-                case 'A', 'a' -> 0;
-                case 'B', 'b' -> 1;
-                case 'C', 'c' -> 2;
+            int col = switch (choice.toUpperCase().charAt(0)) {
+                case 'A' -> 0;
+                case 'B' -> 1;
+                case 'C' -> 2;
                 default -> -1;
             };
             if (row >= 0 && row < 3 && col >= 0 && BLOCKS[row][col] == ' ') {
@@ -87,6 +87,6 @@ public class createNewGame
             System.out.println("Score: X - " + SCORES[0] + ", O - " + SCORES[1]);
             System.out.print("Do you want to play again? (y/n): ");
             Scanner scanner = new Scanner(System.in);
-            boolean KEEP_PLAYING = scanner.next().charAt(0) == 'y';
+            Main.KEEP_PLAYING = scanner.next().toUpperCase().charAt(0) == 'Y';
         }
     }
