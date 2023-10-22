@@ -1,17 +1,21 @@
+import Block.Block;
+import Block.State.Blank;
+import Block.State.SimbolO;
+import Block.State.SimbolX;
+
 import java.util.Random;
 import java.util.Scanner;
 
 public class createNewGame
 {
-        public static char[][] BLOCKS = new char[3][3];
+        public static Block[][] BLOCKS = new Block[3][3];
         public static int[] SCORES = new int[2]; // Index 0 for player X, Index 1 for player O
         public static char CURRENT_PLAYER;
 
         public createNewGame() {
             for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    BLOCKS[i][j] = ' ';
-                }
+                for (int j = 0; j < 3; j++) BLOCKS[i][j] = new Block(Blank.instance());
+
             }
             CURRENT_PLAYER = new Random().nextBoolean() ? 'X' : 'O'; // Randomly choosing the first player
         }
@@ -22,7 +26,7 @@ public class createNewGame
             for (int i = 0; i < 3; i++) {
                 System.out.print(i + 1 + " ");
                 for (int j = 0; j < 3; j++) {
-                    System.out.print("| " + BLOCKS[i][j] + " ");
+                    System.out.print("| " + BLOCKS[i][j].getState().display() + " ");
                 }
                 System.out.println("|");
                 System.out.println("  +---+---+---+");
@@ -58,8 +62,13 @@ public class createNewGame
                 case 'C' -> 2;
                 default -> -1;
             };
-            if (row >= 0 && row < 3 && col >= 0 && BLOCKS[row][col] == ' ') {
-                BLOCKS[row][col] = CURRENT_PLAYER;
+            if (row >= 0 && row < 3 && col >= 0 && BLOCKS[row][col].getState() == Blank.instance()) {
+                if (CURRENT_PLAYER == 'X') {
+                    BLOCKS[row][col].setState(SimbolX.instance());
+                } else {
+                    BLOCKS[row][col].setState(SimbolO.instance());
+                }
+                //BLOCKS[row][col] = CURRENT_PLAYER;
                 return true;
             }
             return false;
@@ -67,13 +76,27 @@ public class createNewGame
 
         public static boolean checkVictory () {
             for (int i = 0; i < 3; i++) {
-                if ((BLOCKS[i][0] == CURRENT_PLAYER && BLOCKS[i][1] == CURRENT_PLAYER && BLOCKS[i][2] == CURRENT_PLAYER) ||
-                        (BLOCKS[0][i] == CURRENT_PLAYER && BLOCKS[1][i] == CURRENT_PLAYER && BLOCKS[2][i] == CURRENT_PLAYER)) {
+                if(
+                    (
+                        (BLOCKS[i][0].getState() != Blank.instance)
+                        && (BLOCKS[i][0].getState() == BLOCKS[i][1].getState())
+                        && (BLOCKS[i][1].getState() == BLOCKS[i][2].getState())
+                    )||(
+                        (BLOCKS[0][i].getState() != Blank.instance)
+                        && (BLOCKS[0][i].getState() == BLOCKS[1][i].getState())
+                        && (BLOCKS[1][i].getState() == BLOCKS[2][i].getState())
+                    )
+                ){
                     return true;
                 }
             }
-            return (BLOCKS[0][0] == CURRENT_PLAYER && BLOCKS[1][1] == CURRENT_PLAYER && BLOCKS[2][2] == CURRENT_PLAYER) ||
-                    (BLOCKS[0][2] == CURRENT_PLAYER && BLOCKS[1][1] == CURRENT_PLAYER && BLOCKS[2][0] == CURRENT_PLAYER);
+            return BLOCKS[0][0].getState() != Blank.instance &&
+                    (BLOCKS[0][0].getState() == BLOCKS[1][1].getState())
+                    && (BLOCKS[1][1].getState() == BLOCKS[2][2].getState())
+                    ||
+                    BLOCKS[0][2].getState() != Blank.instance &&
+                    (BLOCKS[0][2].getState() == BLOCKS[1][1].getState())
+                    && (BLOCKS[1][1].getState() == BLOCKS[2][0].getState());
         }
 
         public static void showResults () {
